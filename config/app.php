@@ -180,6 +180,9 @@ return [
 
         Spatie\Permission\PermissionServiceProvider::class,
 
+        // toastr
+        Yoeunes\Toastr\ToastrServiceProvider::class
+
     ],
 
     /*
