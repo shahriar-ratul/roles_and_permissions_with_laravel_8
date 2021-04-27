@@ -48,3 +48,18 @@ Route::group(['middleware' => ['auth', 'role_or_permission:admin|create-role|cre
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
 });
+
+
+//////////////////////////////// axios request
+
+Route::get('/getAllPermission', 'PermissionController@getAllPermissions');
+Route::post("/postRole", "RoleController@store");
+Route::get("/getAllUsers", "UserController@getAll");
+Route::get("/getAllRoles", "RoleController@getAll");
+Route::get("/getAllPermissions", "PermissionController@getAll");
+
+/////////////axios create user
+Route::post('/account/create', 'UserController@store');
+Route::put('/account/update/{id}', 'UserController@update');
+Route::delete('/delete/user/{id}', 'UserController@delete');
+Route::get('/search/user', 'UserController@search');

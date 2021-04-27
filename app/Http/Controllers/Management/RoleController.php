@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Management;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {
@@ -12,9 +13,14 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Role $role)
+    {
+        $this->role = $role;
+    }
     public function index()
     {
-        //
+        $roles = $this->role::all();
+        return view('role.index', ['roles' => $roles]);
     }
 
     /**
@@ -24,7 +30,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return view('role.create');
     }
 
     /**
@@ -35,7 +41,28 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|unique:roles',
+            'permissions' => 'nullable'
+        ]);
+
+        $role = $this->role->create([
+            'name' => $request->name
+        ]);
+
+        if ($request->has("permissions")) {
+            $role->givePermissionTo($request->permissions);
+        }
+
+        return response()->json("Role Created", 200);
+    }
+
+    public function getAll()
+    {
+        $roles = $this->role->all();
+        return response()->json([
+            'roles' => $roles
+        ], 200);
     }
 
     /**
