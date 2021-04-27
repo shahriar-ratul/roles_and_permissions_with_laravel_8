@@ -169,7 +169,7 @@ export default {
             loading: false,
             editMode: false,
             load: true,
-            img: 'http://localhost:8000/img/avatar.jpg',
+            img: '/img/avatar.jpg',
             user: {},
             users: [],
             roles: [],
@@ -254,8 +254,11 @@ export default {
         },
         viewUser(user){
             $('#viewUser').modal('show');
-            this.img = 'http://localhost:8000/img/'+user.photo;
-            this.user = user;
+            if(user.photo != null){
+                  this.img = '/img/'+user.photo;
+                this.user = user;
+            }
+
         },
         getRoles(){
             axios.get('/getAllRoles').then((response) =>{
