@@ -52,14 +52,14 @@ Route::group(['middleware' => ['auth', 'role_or_permission:admin|create-role|cre
 
 //////////////////////////////// axios request
 
-Route::get('/getAllPermission', 'PermissionController@getAllPermissions');
-Route::post("/postRole", "RoleController@store");
-Route::get("/getAllUsers", "UserController@getAll");
-Route::get("/getAllRoles", "RoleController@getAll");
-Route::get("/getAllPermissions", "PermissionController@getAll");
+Route::get('/getAllPermission', [PermissionController::class, 'getAllPermissions']);
+Route::post("/postRole", [RoleController::class, 'store']);
+Route::get("/getAllUsers", [UserController::class, 'getAll']);
+Route::get("/getAllRoles", [RoleController::class, 'getAll']);
+Route::get("/getAllPermissions", [PermissionController::class, 'getAll']);
 
 /////////////axios create user
-Route::post('/account/create', 'UserController@store');
-Route::put('/account/update/{id}', 'UserController@update');
-Route::delete('/delete/user/{id}', 'UserController@delete');
-Route::get('/search/user', 'UserController@search');
+Route::post('/account/create',);
+Route::put('/account/update/{id}',);
+Route::delete('/delete/user/{id}',  [UserController::class, 'delete']);
+Route::get('/search/user', [UserController::class, 'search']);
