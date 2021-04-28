@@ -20,7 +20,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = $this->role::all();
-        return view('role.index', ['roles' => $roles]);
+        return view('admin.role.index', ['roles' => $roles]);
     }
 
     /**
@@ -30,7 +30,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('role.create');
+        return view('admin.role.create');
     }
 
     /**
@@ -47,14 +47,15 @@ class RoleController extends Controller
         ]);
 
         $role = $this->role->create([
-            'name' => $request->name
+            'name' => $request->name,
+            'display_name' => $request->display_name
         ]);
 
         if ($request->has("permissions")) {
             $role->givePermissionTo($request->permissions);
         }
 
-        return response()->json("Role Created", 200);
+        return response()->json("Roles Created", 200);
     }
 
     public function getAll()

@@ -61,8 +61,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/getAllPermissions", [PermissionController::class, 'getAll']);
 
     /////////////axios create user
-    Route::post('/account/create',);
-    Route::put('/account/update/{id}',);
+    Route::post('/account/create', [UserController::class, 'store']);
+    Route::put('/account/update/{id}', [UserController::class, 'update']);
     Route::delete('/delete/user/{id}',  [UserController::class, 'delete']);
     Route::get('/search/user', [UserController::class, 'search']);
 });

@@ -52,7 +52,6 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|string',
-            'phone' => 'required',
             'password' => 'required|alpha_num|min:6',
             'role' => 'required',
             'email' => 'required|email|unique:users'
@@ -62,7 +61,6 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->phone = $request->phone;
         $user->password = bcrypt($request->password);
 
         $user->assignRole($request->role);
@@ -109,7 +107,6 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|string',
-            'phone' => 'required',
             'password' => 'nullable|alpha_num|min:6',
             'role' => 'required',
             'email' => 'required|email|unique:users,email,' . $id
@@ -176,7 +173,6 @@ class UserController extends Controller
         $user = auth()->user();
         $this->validate($request, [
             'name' => 'required',
-            'phone' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id
         ]);
 

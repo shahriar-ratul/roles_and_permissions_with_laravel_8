@@ -23,10 +23,11 @@ class PermissionsDemoSeeder extends Seeder
         Permission::create([
             'name' => 'create-role',
             'display_name' => 'Create Role'
-            ]);
+        ]);
 
 
         $role = Role::create(['name' => 'superadmin']);
+        $role->givePermissionTo('create-role');
         // gets all permissions via Gate::before rule; see AuthServiceProvider
 
 

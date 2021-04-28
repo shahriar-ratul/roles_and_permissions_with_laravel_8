@@ -104,12 +104,12 @@
                                 <has-error :form="form" field="email"></has-error>
                             </div>
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label> Phone Number </label>
                                 <input v-model="form.phone" type="text" name="phone" placeholder="Phone Number"
                                     class="form-control" :class="{'is-invaild': form.errors.has('phone')}">
                                 <has-error :form="form" field="phone"></has-error>
-                            </div>
+                            </div> -->
 
                             <div class="form-group">
                                 <label> Choose Role </label>
@@ -177,7 +177,7 @@ export default {
             form: new Form({
                 'id' : '',
                 'name': '',
-                'phone': '',
+                // 'phone': '',
                 'password': '',
                 'email': '',
                 'permissions': [],
