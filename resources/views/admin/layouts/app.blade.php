@@ -35,21 +35,64 @@
                     <a href="#" class="nav-link">Contact</a>
                 </li>
             </ul>
+
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item d-none d-sm-inline-block">
-
-                    <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">
-                        <p>
-                            <i class="nav-icon fas fa-power-off"></i>
-                            Logout
-                        </p>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                      <i class="fas fa-expand-arrows-alt"></i>
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </li>
+                  </li>
+
+                  <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                      <img src="{{ asset('img/avatar.jpg') }}" class="user-image img-circle elevation-2" alt="User Image">
+                      <span class="d-none d-md-inline">Alexander Pierce</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                      <!-- User image -->
+                      <li class="user-header bg-primary">
+                        <img src="{{ asset('img/avatar.jpg') }}" class="img-circle elevation-2" alt="User Image">
+
+                        <p>
+                          Alexander Pierce - Web Developer
+                          <small>Member since Nov. 2012</small>
+                        </p>
+                      </li>
+                      <!-- Menu Body -->
+                      <li class="user-body">
+                        <div class="row">
+                          <div class="col-4 text-center">
+                            <a href="#">Followers</a>
+                          </div>
+                          <div class="col-4 text-center">
+                            <a href="#">Sales</a>
+                          </div>
+                          <div class="col-4 text-center">
+                            <a href="#">Friends</a>
+                          </div>
+                        </div>
+                        <!-- /.row -->
+                      </li>
+                      <!-- Menu Footer-->
+                      <li class="user-footer">
+                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                        <a href="{{ route('logout') }}" class="btn btn-default btn-flat float-right" onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                            <p>
+                                <i class="nav-icon fas fa-power-off"></i>
+                                Logout
+                            </p>
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+
+                      </li>
+                    </ul>
+                  </li>
+
+
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -57,7 +100,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="{{route('home')}}" class="brand-link">
                 <img src="{{ asset('img/logo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">AdminLTE 3</span>
             </a>

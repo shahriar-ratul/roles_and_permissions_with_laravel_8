@@ -73,7 +73,7 @@ class PermissionController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
     public function getAll()
     {
@@ -91,7 +91,7 @@ class PermissionController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -103,7 +103,7 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**
@@ -114,6 +114,6 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        //
+
     }
 }
