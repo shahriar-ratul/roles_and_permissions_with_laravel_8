@@ -47,7 +47,7 @@
                   <li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                       <img src="{{ asset('img/avatar.jpg') }}" class="user-image img-circle elevation-2" alt="User Image">
-                      <span class="d-none d-md-inline">Alexander Pierce</span>
+                      <span class="d-none d-md-inline"> {{auth()->user()->name}}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                       <!-- User image -->
@@ -55,29 +55,35 @@
                         <img src="{{ asset('img/avatar.jpg') }}" class="img-circle elevation-2" alt="User Image">
 
                         <p>
-                          Alexander Pierce - Web Developer
+                          {{auth()->user()->name}}
                           <small>Member since Nov. 2012</small>
                         </p>
                       </li>
                       <!-- Menu Body -->
                       <li class="user-body">
                         <div class="row">
-                          <div class="col-4 text-center">
-                            <a href="#">Followers</a>
+                          <div class="col-md-12 text-center">
+                            <a href="{{ route('userGetPassword') }}"><i class="fas fa-lock nav-icon"></i> Change Password</a>
                           </div>
-                          <div class="col-4 text-center">
-                            <a href="#">Sales</a>
+                        </div>
+                        <div class="row pt-md-3">
+                          <div class="col-md-6 text-center">
+                            <a href="#"><i class="fas fa-image nav-icon"></i> Photo</a>
                           </div>
-                          <div class="col-4 text-center">
-                            <a href="#">Friends</a>
+
+                          <div class="col-md-6 text-center">
+                            <a href="#">
+                                <i class="fas fa-bell nav-icon"></i>
+                                Notifications
+                            </a>
                           </div>
                         </div>
                         <!-- /.row -->
                       </li>
                       <!-- Menu Footer-->
                       <li class="user-footer">
-                        <a href="#" class="btn btn-default btn-flat">Profile</a>
-                        <a href="{{ route('logout') }}" class="btn btn-default btn-flat float-right" onclick="event.preventDefault();
+                        <a href="{{ route('user.profile') }}" class="btn btn-default text-dark"><i class="nav-icon fas fa-user"></i> Profile</a>
+                        <a href="{{ route('logout') }}" class="btn btn-default text-dark float-right" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
                             <p>
                                 <i class="nav-icon fas fa-power-off"></i>
