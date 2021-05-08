@@ -35,7 +35,7 @@ Roles
                     </td>
                     <td><span class="tag tag-success">{{ $role->created_at }}</span></td>
                     <td>
-                        <a href="{{ route('roles.edit', $role->id ) }}" class="btn btn-info">Change Permission</a>
+                        <a href="{{ route('roles.edit', $role->id ) }}" class="btn btn-info"><i class="fas fa-edit"></i></a>
 
                         <button class="btn btn-danger" data-value="{{$role->id}}" id='deleteItem' onclick="deleteConfirmation({{$role->id}})" >
                             <i class='far fa-trash-alt'></i>

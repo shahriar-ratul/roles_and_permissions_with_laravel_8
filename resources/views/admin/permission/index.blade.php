@@ -4,49 +4,60 @@
 @section('title')
 Permissions
 @endsection
+
+@push('css')
+<link rel="stylesheet" href="{{asset('datatable')}}/jquery.dataTables.css">
+
+@endpush
+
 @section('content')
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Permission Table</h3>
 
         <div class="card-tools">
-            <a href="{{ route('permissions.create') }}" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Create new permission</a>
+            <a href="{{ route('permissions.create') }}" class="btn btn-primary"><i class="fas fa-plus-circle"></i>
+                Create new permission</a>
         </div>
     </div>
     <!-- /.card-header -->
     <div class="card-body table-responsive p-0">
-        <table class="table table-hover" id="datatable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Display Name</th>
-                    <th>Name</th>
-                    <th>Group Name</th>
-                    <th>Date Posted</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($permissions as $permission)
-                <tr>
-                    <td>{{ $permission->id }}</td>
-                    <td>{{ $permission->display_name }}</td>
-                    <td>{{ $permission->name }}</td>
-                    <td>{{ $permission->group_name }}</td>
-                    <td>{{ $permission->created_at }}</td>
-                    <td>
-                        <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-sm btn-warning"><i class='far fa-pencil'></i></a></a>
+        <div class="container pt-2">
+            <table class="table table-hover" id="datatable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Display Name</th>
+                        <th>Name</th>
+                        <th>Group Name</th>
+                        <th>Date Posted</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($permissions as $permission)
+                    <tr>
+                        <td>{{ $permission->id }}</td>
+                        <td>{{ $permission->display_name }}</td>
+                        <td>{{ $permission->name }}</td>
+                        <td>{{ $permission->group_name }}</td>
+                        <td>{{ $permission->created_at }}</td>
+                        <td>
+                            <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
 
-                        <button class="btn btn-sm btn-danger" data-value="{{$permission->id}}" id='deleteItem' onclick="deleteConfirmation({{$permission->id}})" >
-                            <i class='far fa-trash-alt'></i>
-                        </button>
-                    </td>
-                </tr>
-                @empty
-                <tr>No Result Found</tr>
-                @endforelse
-            </tbody>
-        </table>
+                            <button class="btn btn-sm btn-danger" data-value="{{$permission->id}}" id='deleteItem'
+                                onclick="deleteConfirmation({{$permission->id}})">
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>No Result Found</tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
     </div>
     <!-- /.card-body -->
 </div>
@@ -54,28 +65,17 @@ Permissions
 
 
 @push('js')
+<script src="{{asset('datatable')}}/jquery.dataTables.js"></script>
 
-
-{{-- <script>
+<script>
     $(function () {
-      $("#datatable").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
+
+      $('#datatable').DataTable({
         "responsive": true,
       });
     });
-  </script> --}}
+</script>
 <script type="text/javascript">
-
-
     function deleteConfirmation(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -119,6 +119,6 @@ Permissions
             }
           })
     }
-    </script>
+</script>
 
 @endpush

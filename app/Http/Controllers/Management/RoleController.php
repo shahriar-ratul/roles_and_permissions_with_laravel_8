@@ -18,12 +18,15 @@ class RoleController extends Controller
      */
     public function __construct(Role $role)
     {
-
         $this->role = $role;
         $this->user = Auth::user();
     }
     public function index()
     {
+        // if (is_null($this->user) || !$this->user->can('role.view')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to view any role !');
+        // }
+
         $roles = $this->role::all();
         return view('admin.role.index', ['roles' => $roles]);
     }
@@ -52,24 +55,52 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name'                  => 'required|string|unique:roles',
-            'display_name'          => 'required|string|unique:roles',
+
+
+
+        if (is_null($this->user) || !$this->user->can('role.create')) {
+            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        }
+
+
+        // $this->validate($request, [
+        //     'name'                  => 'required|string|unique:roles',
+        //     'display_name'          => 'required|string|unique:roles',
+        //     'permissions'           => 'nullable'
+        // ]);
+        // Validation Data
+        $request->validate($request,[
+            'name'              => 'required|max:100|string|unique:roles',
+            'display_name'      => 'required|max:100|string|unique:roles',
             'permissions'           => 'nullable'
+        ], [
+            'name.requried'             => 'Please give a role name',
+            'display_name.requried'     => 'Please give a role Display Name',
         ]);
 
+
         $role = $this->role->create([
-            'name' => $request->name,
-            'display_name' => $request->display_name
+            'name'          => $request->name,
+            'display_name'  => $request->display_name
         ]);
 
         $permissions = $request->input('permissions');
 
-        if (!empty($permissions)) {
+        $permissions = $request->input('permissions');
+        if($permissions == null)
+        {
+            $all = $role->getAllPermissions();
+            $role->revokePermissionTo($all);
+        }
+        else
+        {
             $role->syncPermissions($permissions);
         }
 
-        return response()->json("Roles Created", 200);
+        session()->flash('success', 'Role has been created !!');
+        return redirect()->back();
+
+        // return response()->json("Roles Created", 200);
     }
 
     public function getAll()
@@ -118,26 +149,40 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // if (is_null($this->user) || !$this->user->can('role.edit')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        // }
         $this->validate($request, [
             'name'                  => 'required|string|unique:roles,name,'.$id,
-            'display_name'          => 'required|string|unique:roles,name,'.$id,
+            'display_name'          => 'required|string|unique:roles,display_name,'.$id,
             'permissions'           => 'required'
         ]);
 
-        $this->role = $this->role::find($id);
-        $role = $this->role->update([
-            'name'          => $request->name,
-            'display_name'  => $request->display_name
-        ]);
 
+        $role                   = Role::find($id);
+        $role->name             = $request->name;
+        $role->display_name     = $request->display_name;
+        $role->updated_at       = time();
+        $role->save();
 
         $permissions = $request->input('permissions');
-        if (!empty($permissions)) {
+        if($permissions == null)
+        {
+            $all = $role->getAllPermissions();
+            $role->revokePermissionTo($all);
+        }
+        else
+        {
             $role->syncPermissions($permissions);
         }
+        // if (!empty($permissions)) {
+        //
+        //     $role->syncPermissions($permissions);
+        // }
 
-
-        return response()->json(['message' =>"Roles Updated"], 200);
+        // return response()->json(['message' =>"Roles Updated"], 200);
+        session()->flash('success', 'Role has been Updated !!');
+        return redirect()->back();
 
     }
 
@@ -149,9 +194,9 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        if (is_null($this->user) || !$this->user->can('role.delete')) {
-            abort(403, 'Sorry !! You are Unauthorized to delete any Role !');
-        }
+        // if (is_null($this->user) || !$this->user->can('role.delete')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to delete any Role !');
+        // }
         $role = Role::findorfail($id);
         if (!is_null($role)) {
             $role->delete();
