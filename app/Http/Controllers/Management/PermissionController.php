@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Management;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -16,6 +17,7 @@ class PermissionController extends Controller
     public function __construct(Permission $permission)
     {
         $this->permission = $permission;
+        $this->user = Auth::user();
         $this->middleware(['auth', 'role_or_permission:superadmin|admin|create role|create permission']);
     }
 
@@ -134,12 +136,19 @@ class PermissionController extends Controller
         if (is_null($this->user) || !$this->user->can('permission.delete')) {
             abort(403, 'Sorry !! You are Unauthorized to delete any permission !');
         }
-        $permission = Permission::findById($id);
+        $permission = Permission::findorfail($id);
         if (!is_null($permission)) {
             $permission->delete();
+            $success = true;
+            $message = "Permission deleted successfully";
+        }else {
+            $success = true;
+            $message = "Permission not found";
         }
-        session()->flash('success', 'Permission has been deleted !!');
-        return back();
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
 
     }
 }

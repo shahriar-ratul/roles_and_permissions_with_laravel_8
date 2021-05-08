@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Management;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -15,7 +18,9 @@ class RoleController extends Controller
      */
     public function __construct(Role $role)
     {
+
         $this->role = $role;
+        $this->user = Auth::user();
     }
     public function index()
     {
@@ -30,7 +35,13 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('admin.role.create');
+        // if (is_null($this->user) || !$this->user->can('role.create')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        // }
+        $all_permissions  = Permission::all();
+        $permission_groups = User::getpermissionGroups();
+        return view('admin.role.create', compact('all_permissions', 'permission_groups'));
+
     }
 
     /**
@@ -88,8 +99,14 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $item = $this->role::find($id);
-        return view('admin.role.edit',compact('item'));
+        // if (is_null($this->user) || !$this->user->can('role.edit')) {
+        //     abort(403, 'Sorry !! You are Unauthorized to edit any role !');
+        // }
+
+        $role = $this->role::find($id);
+        $all_permissions = Permission::all();
+        $permission_groups = User::getpermissionGroups();
+        return view('admin.role.edit', compact('role', 'all_permissions', 'permission_groups'));
     }
 
     /**
@@ -103,7 +120,7 @@ class RoleController extends Controller
     {
         $this->validate($request, [
             'name'                  => 'required|string|unique:roles,name,'.$id,
-            'display_name'          => 'required|string',
+            'display_name'          => 'required|string|unique:roles,name,'.$id,
             'permissions'           => 'required'
         ]);
 
@@ -132,17 +149,21 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-
         if (is_null($this->user) || !$this->user->can('role.delete')) {
-            abort(403, 'Sorry !! You are Unauthorized to delete any role !');
+            abort(403, 'Sorry !! You are Unauthorized to delete any Role !');
         }
-
-        $role = Role::findById($id);
+        $role = Role::findorfail($id);
         if (!is_null($role)) {
             $role->delete();
+            $success = true;
+            $message = "Role deleted successfully";
+        }else {
+            $success = true;
+            $message = "Role not found";
         }
-
-        session()->flash('success', 'Role has been deleted !!');
-        return back();
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
     }
 }

@@ -37,9 +37,9 @@ Roles
                     <td>
                         <a href="{{ route('roles.edit', $role->id ) }}" class="btn btn-info">Change Permission</a>
 
-                        <button class='btn btn-danger' data-value='$role->id' id='deleteItem' onclick='deleteConfirmation($role->id)' >
+                        <button class="btn btn-danger" data-value="{{$role->id}}" id='deleteItem' onclick="deleteConfirmation({{$role->id}})" >
                             <i class='far fa-trash-alt'></i>
-                    </button>
+                        </button>
                     </td>
                 </tr>
                 @empty
@@ -55,7 +55,7 @@ Roles
 @endsection
 
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
 
 <script type="text/javascript">
 

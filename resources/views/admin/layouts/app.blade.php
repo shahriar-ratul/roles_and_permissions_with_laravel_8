@@ -1,11 +1,11 @@
-@include('admin.layouts.partial.header')
+@include('admin.layouts.partials.header')
 
 <body class="sidebar-mini" style="height: auto;">
     <div class="wrapper" id="app">
         <!-- Navbar -->
-        @include('admin.layouts.partial.navbar')
+        @include('admin.layouts.partials.navbar')
         {{-- sidebar --}}
-        @include('admin.layouts.partial.sidebar')
+        @include('admin.layouts.partials.sidebar')
 
 
         <!-- Content Wrapper. Contains page content -->
@@ -40,11 +40,14 @@
         <!-- /.content-wrapper -->
 
         <!-- Main Footer -->
-        @include('admin.layouts.partial.footer')
+        @include('admin.layouts.partials.footer')
         <div id="sidebar-overlay"></div>
     </div>
     <!-- ./wrapper -->
 
+    @include('admin.layouts.partials.script')
+
+    @yield('scripts')
     @stack('js')
 </body>
 

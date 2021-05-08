@@ -15,7 +15,7 @@ Permissions
     </div>
     <!-- /.card-header -->
     <div class="card-body table-responsive p-0">
-        <table class="table table-hover">
+        <table class="table table-hover" id="datatable">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -37,7 +37,7 @@ Permissions
                     <td>
                         <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-sm btn-warning"><i class='far fa-pencil'></i></a></a>
 
-                        <button class="btn btn-sm btn-danger" data-value='$permission->id' id='deleteItem' onclick='deleteConfirmation($permission->id)' >
+                        <button class="btn btn-sm btn-danger" data-value="{{$permission->id}}" id='deleteItem' onclick="deleteConfirmation({{$permission->id}})" >
                             <i class='far fa-trash-alt'></i>
                         </button>
                     </td>
@@ -54,7 +54,25 @@ Permissions
 
 
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+{{-- <script>
+    $(function () {
+      $("#datatable").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+  </script> --}}
 <script type="text/javascript">
 
 
@@ -73,7 +91,7 @@ Permissions
 
                 $.ajax({
                     type: 'DELETE',
-                    url: "{{url('/superadmin/company')}}/" + id,
+                    url: "{{url('/permissions')}}/" + id,
                     data: {_token: CSRF_TOKEN},
                     dataType: 'JSON',
                     success: function (results) {
@@ -81,7 +99,7 @@ Permissions
                             swal.fire("Done!", results.message, "success");
                             // refresh page after 2 seconds
                             setTimeout(function(){
-                                location.reload();
+                                window.location.reload();
                             },500);
                         } else {
                             swal.fire("Error!", results.message, "error");
