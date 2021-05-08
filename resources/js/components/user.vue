@@ -31,8 +31,8 @@
                         <th>Name</th>
                         <th>Role</th>
                         <th>Email</th>
-                        <th>Action</th>
                         <th>Date Posted</th>
+                        <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,14 +41,15 @@
                             <td> {{ user.name }}</td>
                             <td>{{ user.role }}</td>
                             <td>{{ user.email }}</td>
+                              <td>
+                                {{ user.created_at | date }}
+                            </td>
                             <td>
                                 <button class="btn btn-sm btn-info" @click="viewUser(user)"> <i class="fa fa-eye"></i> View</button>
                                 <button class="btn btn-sm btn-warning" @click="editUser(user)" > <i class="fa fa-edit"></i> Edit</button>
                                 <button class="btn btn-sm btn-danger" @click="deleteUser(user)"> <i class="fa fa-trash"></i> Delete </button>
                             </td>
-                            <td>
-                                {{ user.created_at | date }}
-                            </td>
+
                         </tr>
                     </tbody>
                 </table>
