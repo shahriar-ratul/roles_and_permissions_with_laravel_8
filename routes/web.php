@@ -17,12 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
@@ -43,7 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 // permission and roles
-Route::group(['middleware' => ['auth', 'role_or_permission:admin|create-role|create-permission']], function () {
+Route::group(['middleware' => ['auth', 'role_or_permission:superadmin|create-role|create-permission']], function () {
 
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);

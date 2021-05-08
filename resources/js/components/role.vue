@@ -8,6 +8,13 @@
 
             </div>
 
+            <div class="form-group">
+                <input v-model="form.display_name" type="text" name="display_name" placeholder="Role Display Name"
+                    class="form-control" :class="{'is-invaild': form.errors.has('display_name')}">
+                <has-error :form="form" field="display_name"></has-error>
+
+            </div>
+
             <b-form-group label="Assign Permissions">
                 <b-form-checkbox
                     v-for="option in permissions"
@@ -37,6 +44,7 @@ export default {
             permissions: [],
             form: new Form({
                 'name' : '',
+                'display_name' : '',
                 'permissions' : []
             })
         }
@@ -62,8 +70,9 @@ export default {
                     title: 'Role Created',
                     text: 'Your Role has been created',
                 })
-                window.location = "/role";
-            }).catch(()=>{
+                window.location = "/roles";
+            }).catch((err)=>{
+                console.log(err);
                 swal.fire({
                     icon: 'error',
                     title: 'Oops...',

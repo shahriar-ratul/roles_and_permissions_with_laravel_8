@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('pageName')
-Create Roles
+Create Role
 @endsection
 
 @section('content')

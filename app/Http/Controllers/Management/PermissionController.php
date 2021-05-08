@@ -54,12 +54,15 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required'
+            'display_name'  => 'required',
+            'group_name'    => 'required',
+            'name'          => 'required'
         ]);
 
         $this->permission->create([
-            'name' => $request->name,
-            'display_name' => $request->display_name
+            'name'          => $request->name,
+            'group_name'    => $request->group_name,
+            'display_name'  => $request->display_name
         ]);
 
         return redirect()->route('permissions.index')->with('success', 'Permission Created');
@@ -91,7 +94,8 @@ class PermissionController extends Controller
      */
     public function edit($id)
     {
-
+        $item = Permission::find($id);
+        return view("admin.permission.edit",compact('item'));
     }
 
     /**
@@ -103,7 +107,20 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'display_name'  => 'required|unique:permissions,display_name,'.$id,
+            'group_name'    => 'required',
+            'name'          => 'required|unique:permissions,name,'.$id,
+        ]);
 
+        $this->permission = Permission::find($id);
+        $this->permission->update([
+            'display_name'  => $request->display_name,
+            'group_name'    => $request->group_name,
+            'name'          => $request->name,
+        ]);
+
+        return redirect()->route('permissions.index')->with('success', 'Permission Updated');
     }
 
     /**
@@ -114,6 +131,15 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
+        if (is_null($this->user) || !$this->user->can('permission.delete')) {
+            abort(403, 'Sorry !! You are Unauthorized to delete any permission !');
+        }
+        $permission = Permission::findById($id);
+        if (!is_null($permission)) {
+            $permission->delete();
+        }
+        session()->flash('success', 'Permission has been deleted !!');
+        return back();
 
     }
 }

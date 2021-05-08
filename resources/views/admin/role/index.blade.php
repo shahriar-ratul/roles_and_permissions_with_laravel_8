@@ -20,6 +20,7 @@ Roles
                     <th>Role</th>
                     <th>Permission</th>
                     <th>Date Posted</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,10 +34,13 @@ Roles
                         @endforeach
                     </td>
                     <td><span class="tag tag-success">{{ $role->created_at }}</span></td>
-                    {{-- <td>
-                            <a href="{{ route('role.show', $role->id ) }}" class="btn btn-info">Change Permission</a>
-                    <a href="{{ route('role.destroy',$role->id ) }}" class="btn btn-danger">Delete</a>
-                    </td> --}}
+                    <td>
+                        <a href="{{ route('roles.edit', $role->id ) }}" class="btn btn-info">Change Permission</a>
+
+                        <button class='btn btn-danger' data-value='$role->id' id='deleteItem' onclick='deleteConfirmation($role->id)' >
+                            <i class='far fa-trash-alt'></i>
+                    </button>
+                    </td>
                 </tr>
                 @empty
                 <tr>
@@ -49,3 +53,56 @@ Roles
 </div>
 
 @endsection
+
+@push('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script type="text/javascript">
+
+
+    function deleteConfirmation(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: "{{url('/roles')}}/" + id,
+                    data: {_token: CSRF_TOKEN},
+                    dataType: 'JSON',
+                    success: function (results) {
+                        if (results.success === true) {
+                            swal.fire("Done!", results.message, "success");
+                            // refresh page after 2 seconds
+                            setTimeout(function(){
+                                location.reload();
+                            },500);
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+                });
+
+            } else if (
+                // Read more about handling dismissals
+                result.dismiss === swal.DismissReason.cancel
+            ) {
+                Swal.fire(
+                    'Cancelled',
+                    'Your data is safe :)',
+                    'error'
+                )
+            }
+          })
+    }
+
+    </script>
+@endpush

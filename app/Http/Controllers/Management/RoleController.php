@@ -42,8 +42,9 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|string|unique:roles',
-            'permissions' => 'nullable'
+            'name'                  => 'required|string|unique:roles',
+            'display_name'          => 'required|string|unique:roles',
+            'permissions'           => 'nullable'
         ]);
 
         $role = $this->role->create([
@@ -51,8 +52,10 @@ class RoleController extends Controller
             'display_name' => $request->display_name
         ]);
 
-        if ($request->has("permissions")) {
-            $role->givePermissionTo($request->permissions);
+        $permissions = $request->input('permissions');
+
+        if (!empty($permissions)) {
+            $role->syncPermissions($permissions);
         }
 
         return response()->json("Roles Created", 200);
@@ -85,7 +88,8 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item = $this->role::find($id);
+        return view('admin.role.edit',compact('item'));
     }
 
     /**
@@ -97,7 +101,27 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name'                  => 'required|string|unique:roles,name,'.$id,
+            'display_name'          => 'required|string',
+            'permissions'           => 'required'
+        ]);
+
+        $this->role = $this->role::find($id);
+        $role = $this->role->update([
+            'name'          => $request->name,
+            'display_name'  => $request->display_name
+        ]);
+
+
+        $permissions = $request->input('permissions');
+        if (!empty($permissions)) {
+            $role->syncPermissions($permissions);
+        }
+
+
+        return response()->json(['message' =>"Roles Updated"], 200);
+
     }
 
     /**
@@ -108,6 +132,17 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        if (is_null($this->user) || !$this->user->can('role.delete')) {
+            abort(403, 'Sorry !! You are Unauthorized to delete any role !');
+        }
+
+        $role = Role::findById($id);
+        if (!is_null($role)) {
+            $role->delete();
+        }
+
+        session()->flash('success', 'Role has been deleted !!');
+        return back();
     }
 }
