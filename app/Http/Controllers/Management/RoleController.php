@@ -19,13 +19,14 @@ class RoleController extends Controller
     public function __construct(Role $role)
     {
         $this->role = $role;
-        $this->user = Auth::user();
+        $this->user = null;
     }
     public function index()
     {
-        // if (is_null($this->user) || !$this->user->can('role.view')) {
-        //     abort(403, 'Sorry !! You are Unauthorized to view any role !');
-        // }
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('role.view')) {
+            abort(403, 'Sorry !! You are Unauthorized to view any role !');
+        }
 
         $roles = $this->role::all();
         return view('admin.role.index', ['roles' => $roles]);
@@ -38,9 +39,10 @@ class RoleController extends Controller
      */
     public function create()
     {
-        // if (is_null($this->user) || !$this->user->can('role.create')) {
-        //     abort(403, 'Sorry !! You are Unauthorized to create any role !');
-        // }
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('role.create')) {
+            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        }
         $all_permissions  = Permission::all();
         $permission_groups = User::getpermissionGroups();
         return view('admin.role.create', compact('all_permissions', 'permission_groups'));
@@ -55,9 +57,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-
-
-
+        $this->user =  Auth::user();
         if (is_null($this->user) || !$this->user->can('role.create')) {
             abort(403, 'Sorry !! You are Unauthorized to create any role !');
         }
@@ -69,13 +69,14 @@ class RoleController extends Controller
         //     'permissions'           => 'nullable'
         // ]);
         // Validation Data
-        $request->validate($request,[
+        $this->validate($request,[
             'name'              => 'required|max:100|string|unique:roles',
             'display_name'      => 'required|max:100|string|unique:roles',
-            'permissions'           => 'nullable'
+            'permissions'       => 'nullable'
         ], [
             'name.requried'             => 'Please give a role name',
             'display_name.requried'     => 'Please give a role Display Name',
+            'permissions.nullable'      => 'nullable'
         ]);
 
 
@@ -130,9 +131,10 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        // if (is_null($this->user) || !$this->user->can('role.edit')) {
-        //     abort(403, 'Sorry !! You are Unauthorized to edit any role !');
-        // }
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('role.edit')) {
+            abort(403, 'Sorry !! You are Unauthorized to edit any role !');
+        }
 
         $role = $this->role::find($id);
         $all_permissions = Permission::all();
@@ -149,9 +151,10 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // if (is_null($this->user) || !$this->user->can('role.edit')) {
-        //     abort(403, 'Sorry !! You are Unauthorized to create any role !');
-        // }
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('role.edit')) {
+            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        }
         $this->validate($request, [
             'name'                  => 'required|string|unique:roles,name,'.$id,
             'display_name'          => 'required|string|unique:roles,display_name,'.$id,
@@ -194,16 +197,18 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        // if (is_null($this->user) || !$this->user->can('role.delete')) {
-        //     abort(403, 'Sorry !! You are Unauthorized to delete any Role !');
-        // }
+        $this->user =  Auth::user();
+        //  {{auth()->user()->getRoleNames()}}
+        if (is_null($this->user) || !$this->user->can('role.delete')) {
+            abort(403, 'Sorry !! You are Unauthorized to delete any Role !');
+        }
         $role = Role::findorfail($id);
         if (!is_null($role)) {
             $role->delete();
             $success = true;
             $message = "Role deleted successfully";
         }else {
-            $success = true;
+            $success = false;
             $message = "Role not found";
         }
         return response()->json([

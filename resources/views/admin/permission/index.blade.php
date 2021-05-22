@@ -16,7 +16,7 @@ Permissions
         <h3 class="card-title">Permission Table</h3>
 
         <div class="card-tools">
-            <a href="{{ route('permissions.create') }}" class="btn btn-primary"><i class="fas fa-plus-circle"></i>
+            <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary"><i class="fas fa-plus-circle"></i>
                 Create new permission</a>
         </div>
     </div>
@@ -43,7 +43,7 @@ Permissions
                         <td>{{ $permission->group_name }}</td>
                         <td>{{ $permission->created_at }}</td>
                         <td>
-                            <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                            <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
 
                             <button class="btn btn-sm btn-danger" data-value="{{$permission->id}}" id='deleteItem'
                                 onclick="deleteConfirmation({{$permission->id}})">
@@ -91,7 +91,7 @@ Permissions
 
                 $.ajax({
                     type: 'DELETE',
-                    url: "{{url('/permissions')}}/" + id,
+                    url: "{{url('admin/permissions')}}/" + id,
                     data: {_token: CSRF_TOKEN},
                     dataType: 'JSON',
                     success: function (results) {

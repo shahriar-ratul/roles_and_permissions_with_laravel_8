@@ -3,23 +3,27 @@
 @section('title')
 Roles
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('datatable')}}/jquery.dataTables.css">
+
+@endpush
 
 @section('content')
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Roles Table</h3>
         <div class="card-tools">
-            <a href="{{ route('roles.create') }} " class="btn btn-primary"><i class="fas fa-shield-alt"></i> Add new Role</a>
+            <a href="{{ route('admin.roles.create') }} " class="btn btn-primary"><i class="fas fa-shield-alt"></i> Add new Role</a>
         </div>
     </div>
     <div class="card-body table-responsive p-0">
-        <table class="table table-hover text-nowrap">
+        <table class="table table-hover" id="datatable">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Role</th>
                     <th>Permission</th>
-                    <th>Date Posted</th>
+                    <th>Created Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -33,13 +37,27 @@ Roles
                         <button class="btn btn-warning" role="button"><i class="fas fa-shield-alt"></i> {{ $permission->name }}</button>
                         @endforeach
                     </td>
-                    <td><span class="tag tag-success">{{ $role->created_at }}</span></td>
+                    <td><span class="tag tag-success">{{ $role->created_at->format('Y-m-d  h:s A') }}</span></td>
                     <td>
-                        <a href="{{ route('roles.edit', $role->id ) }}" class="btn btn-info"><i class="fas fa-edit"></i></a>
+                        @role('superadmin')
 
-                        <button class="btn btn-danger" data-value="{{$role->id}}" id='deleteItem' onclick="deleteConfirmation({{$role->id}})" >
-                            <i class='far fa-trash-alt'></i>
-                        </button>
+                            <a href="{{ route('admin.roles.edit', $role->id ) }}" class="btn btn-info"><i class="fas fa-edit"></i></a>
+
+                            <button class="btn btn-danger" data-value="{{$role->id}}" id='deleteItem' onclick="deleteConfirmation({{$role->id}})" >
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                        @else
+                            @can('role.edit')
+                            <a href="{{ route('roles.edit', $role->id ) }}" class="btn btn-info"><i class="fas fa-edit"></i></a>
+                            @endcan
+
+                            @can('role.delete')
+                            <button class="btn btn-danger" data-value="{{$role->id}}" id='deleteItem' onclick="deleteConfirmation({{$role->id}})" >
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                            @endcan
+                        @endrole
+
                     </td>
                 </tr>
                 @empty
@@ -55,8 +73,17 @@ Roles
 @endsection
 
 @push('js')
-{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
 
+<script src="{{asset('datatable')}}/jquery.dataTables.js"></script>
+
+<script>
+    $(function () {
+
+      $('#datatable').DataTable({
+        "responsive": true,
+      });
+    });
+</script>
 <script type="text/javascript">
 
 
@@ -75,7 +102,7 @@ Roles
 
                 $.ajax({
                     type: 'DELETE',
-                    url: "{{url('/roles')}}/" + id,
+                    url: "{{url('admin/roles')}}/" + id,
                     data: {_token: CSRF_TOKEN},
                     dataType: 'JSON',
                     success: function (results) {

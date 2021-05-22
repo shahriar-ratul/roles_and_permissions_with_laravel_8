@@ -9,7 +9,7 @@ Update Role
     <div class="card-header">
         <h3 class="card-title">Add new Role</h3>
         <div class="card-tools">
-            <a href="{{ route('roles.index') }}" class="btn btn-danger"><i class="fas fa-shield-alt"></i> See all Roles</a>
+            <a href="{{ route('admin.roles.index') }}" class="btn btn-danger"><i class="fas fa-shield-alt"></i> See all Roles</a>
         </div>
     </div>
     <div class="card-body">
@@ -21,7 +21,7 @@ Update Role
                         <h4 class="header-title">Edit Role</h4>
                         @include('admin.layouts.partials.messages')
 
-                        <form action="{{ route('roles.update', $role->id) }}" method="POST">
+                        <form action="{{ route('admin.roles.update', $role->id) }}" method="POST">
                             @method('PUT')
                             @csrf
                             <div class="form-group">
@@ -62,7 +62,7 @@ Update Role
                                             @foreach ($permissions as $permission)
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" onclick="checkSinglePermission('role-{{ $i }}-management-checkbox', '{{ $i }}Management', {{ count($permissions) }})" name="permissions[]" {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }} id="checkPermission{{ $permission->id }}" value="{{ $permission->name }}">
-                                                    <label class="form-check-label" for="checkPermission{{ $permission->id }}">{{ $permission->name }}</label>
+                                                    <label class="form-check-label" for="checkPermission{{ $permission->id }}">{{ $permission->display_name }}</label>
                                                 </div>
                                                 @php  $j++; @endphp
                                             @endforeach

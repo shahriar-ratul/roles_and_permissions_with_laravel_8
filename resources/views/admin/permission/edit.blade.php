@@ -9,10 +9,10 @@ upsate Permission -
     <div class="card-header">
         <h3 class="card-title">Edit Permission</h3>
         <div class="card-tools">
-            <a href="{{ route('permissions.index') }}" class="btn btn-danger"><i class="fas fa-shield-alt"></i> See all Permission</a>
+            <a href="{{ route('admin.permissions.index') }}" class="btn btn-danger"><i class="fas fa-shield-alt"></i> See all Permission</a>
         </div>
     </div>
-    <form method="POST" action="{{ route('permissions.update',['permission'=>$item->id]) }}">
+    <form method="POST" action="{{ route('admin.permissions.update',['permission'=>$item->id]) }}">
         @csrf
         @method('PUT')
         <div class="card-body">

@@ -29,6 +29,7 @@
                             </p>
                         </a>
                     </li>
+                    @canany(['role.view', 'permission.view', 'user.view'])
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link active">
                             <i class="nav-icon fas fa-cogs"></i>
@@ -38,28 +39,34 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            @can('create-role')
+                            @can('role.view')
                             <li class="nav-item">
-                                <a href="{{ route('roles.index') }}" class="nav-link">
+                                <a href="{{ route('admin.roles.index') }}" class="nav-link">
                                     <i class="fas fa-bomb nav-icon"></i>
                                     <p>Roles</p>
                                 </a>
                             </li>
+                            @endcan
+                            @can('permission.view')
                             <li class="nav-item">
-                                <a href="{{ route('permissions.index') }}" class="nav-link">
+                                <a href="{{ route('admin.permissions.index') }}" class="nav-link">
                                     <i class="fas fa-bomb nav-icon"></i>
                                     <p>Permissions</p>
                                 </a>
                             </li>
                             @endcan
+
+                            @can('user.view')
                             <li class="nav-item">
-                                <a href="{{ route('users.index') }}" class="nav-link">
+                                <a href="{{ route('admin.users.index') }}" class="nav-link">
                                     <i class="fas fa-users-cog nav-icon"></i>
                                     <p>Users</p>
                                 </a>
                             </li>
+                            @endcan
                         </ul>
                     </li>
+                    @endcanany
 
 
 

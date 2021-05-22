@@ -18,24 +18,20 @@ class PermissionController extends Controller
     {
         $this->permission = $permission;
         $this->user = Auth::user();
-        $this->middleware(['auth', 'role_or_permission:superadmin|admin|create role|create permission']);
+        $this->middleware(['auth', 'role_or_permission:superadmin|admin|permission.view|permission.create|permission.edit|permission.delete']);
     }
 
     public function index()
     {
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('permission.view')) {
+            abort(403, 'Sorry !! You are Unauthorized to view any Permission !');
+        }
         $permissions = $this->permission::all();
 
         return view("admin.permission.index", ['permissions' => $permissions]);
     }
 
-    public function getAllPermissions()
-    {
-        $permissions = $this->permission::all();
-
-        return response()->json([
-            'permissions' => $permissions
-        ], 200);
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -44,6 +40,10 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('permission.create')) {
+            abort(403, 'Sorry !! You are Unauthorized to Create any Permission !');
+        }
         return view("admin.permission.create");
     }
 
@@ -55,10 +55,14 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('permission.create')) {
+            abort(403, 'Sorry !! You are Unauthorized to Create any Permission !');
+        }
         $this->validate($request, [
             'display_name'  => 'required',
             'group_name'    => 'required',
-            'name'          => 'required'
+            'name'          => 'required|unique:permissions'
         ]);
 
         $this->permission->create([
@@ -67,7 +71,7 @@ class PermissionController extends Controller
             'display_name'  => $request->display_name
         ]);
 
-        return redirect()->route('permissions.index')->with('success', 'Permission Created');
+        return redirect()->route('admin.permissions.index')->with('success', 'Permission Created');
     }
 
     /**
@@ -78,15 +82,13 @@ class PermissionController extends Controller
      */
     public function show($id)
     {
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('permission.view')) {
+            abort(403, 'Sorry !! You are Unauthorized to View any Permission !');
+        }
 
     }
-    public function getAll()
-    {
-        $permissions = $this->permission->all();
-        return response()->json([
-            'permissions' => $permissions
-        ], 200);
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -96,6 +98,11 @@ class PermissionController extends Controller
      */
     public function edit($id)
     {
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('permission.edit')) {
+            abort(403, 'Sorry !! You are Unauthorized to Update any Permission !');
+        }
+
         $item = Permission::find($id);
         return view("admin.permission.edit",compact('item'));
     }
@@ -109,6 +116,11 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->user =  Auth::user();
+        if (is_null($this->user) || !$this->user->can('permission.edit')) {
+            abort(403, 'Sorry !! You are Unauthorized to Update any Permission !');
+        }
+
         $this->validate($request, [
             'display_name'  => 'required|unique:permissions,display_name,'.$id,
             'group_name'    => 'required',
@@ -122,7 +134,7 @@ class PermissionController extends Controller
             'name'          => $request->name,
         ]);
 
-        return redirect()->route('permissions.index')->with('success', 'Permission Updated');
+        return redirect()->route('admin.permissions.index')->with('success', 'Permission Updated');
     }
 
     /**
@@ -150,5 +162,24 @@ class PermissionController extends Controller
             'message' => $message,
         ]);
 
+    }
+
+
+
+    public function getAllPermissions()
+    {
+        $permissions = $this->permission::all();
+
+        return response()->json([
+            'permissions' => $permissions
+        ], 200);
+    }
+
+    public function getAll()
+    {
+        $permissions = $this->permission->all();
+        return response()->json([
+            'permissions' => $permissions
+        ], 200);
     }
 }

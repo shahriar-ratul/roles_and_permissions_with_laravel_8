@@ -47,8 +47,7 @@
 
     @include('admin.layouts.partials.script')
 
-    @yield('scripts')
-    @stack('js')
+
 </body>
 
 </html>

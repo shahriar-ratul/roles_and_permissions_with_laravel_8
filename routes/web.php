@@ -21,19 +21,23 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Auth::routes();
+Route::group(['middleware' => 'web'], function () {
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Auth::routes();
+
+
+
+});
 
 
 
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('welcome');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     // user route
-    Route::resource('users', UserController::class);
+
 
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/profile', [UserController::class, 'postProfile'])->name('user.postProfile');
@@ -44,10 +48,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 // permission and roles
-Route::group(['middleware' => ['auth', 'role_or_permission:superadmin|create-role|create-permission']], function () {
+Route::group(['prefix'=> 'admin','as'=>'admin.','middleware' => ['auth']], function () {
 
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
 });
 
 

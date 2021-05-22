@@ -1,8 +1,9 @@
 @extends('errors.layout')
+@section('title', __('Page Not Found'))
 @section('content')
 <div id="notfound">
     <div class="notfound">
-        <div class="notfound-404">
+        <div class="notfound-404" >
             <h1>404</h1>
         </div>
         <h2>We are sorry,404 Page not found!</h2>
